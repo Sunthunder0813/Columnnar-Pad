@@ -10,7 +10,6 @@ import { createPortal } from 'react-dom';
 const SHOW_ALL_COLUMNS = true;
 const MIN_LINES = 12;   // blank ruled rows kept on the page (0 = none)
 const SLOTS = 6;        // digit boxes per amount (grows automatically for bigger numbers)
-const COMMAS = false;   // true = 10,000   false = 10000 (like the paper pad)
 
 type Level = 'easy' | 'normal' | 'hard';
 const LEVELS: { v: Level; label: string; count: number; hint: string; dot: string }[] = [
@@ -326,7 +325,7 @@ export default function PadView() {
       if (!r.ok) throw new Error(j.error || 'Request failed');
       if (!j.balanced) throw new Error('The AI entry does not balance. Reword the transaction and try again.');
       setRes(j);
-    } catch (e: any) { setErr(e.message); }
+    } catch (e) { setErr(e instanceof Error ? e.message : 'Something went wrong'); }
     setBusy(false);
   };
   const attach = () => {
@@ -396,7 +395,7 @@ export default function PadView() {
       setItems(list);
       setSeen(p => [...p, ...list.map(x => x.description)]);
       list.forEach(it => d({ t: 'post', date: it.date, desc: it.description, entries: [] }));
-    } catch (e: any) { setErr(e.message); }
+    } catch (e) { setErr(e instanceof Error ? e.message : 'Something went wrong'); }
     setPbusy(false);
   };
   const newSet = (lv: Level = level) => {
@@ -506,10 +505,6 @@ export default function PadView() {
             <button onClick={() => setW({})} className="h-8 rounded-lg border border-[#c2602f] px-3 text-sm text-[#a94f23] hover:bg-[#fffaf1]">Reset widths</button>
             {prOn ? (
               <>
-                {showRes && (
-                  <button onClick={() => setResOpen(true)}
-                    className="h-8 rounded-lg bg-[#3f6b45] px-3 text-sm font-semibold text-white hover:bg-[#345a3a]">Review results</button>
-                )}
                 <button onClick={() => setPickOpen(true)} disabled={pbusy}
                   className="h-8 rounded-lg border border-[#c2602f] px-3 text-sm text-[#a94f23] hover:bg-[#fffaf1] disabled:opacity-40">Change level</button>
                 <button onClick={() => newSet()} disabled={pbusy}

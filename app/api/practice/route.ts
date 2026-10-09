@@ -67,7 +67,7 @@ function clean(raw: any, allowed: Col[]): Raw[] {
   if (!Array.isArray(raw)) return out;
   for (const p of raw) {
     if (!p || typeof p.description !== 'string' || !Array.isArray(p.entries)) continue;
-    const description = p.description.trim().replace(/\s+/g, ' ');
+    const description: string = String(p.description).trim().replace(/\s+/g, ' ');
     if (!description || used.has(description.toLowerCase())) continue;
 
     // Snap every entry to a real account (exact name and type). Drop the whole item if any entry is bad.
