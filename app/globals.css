@@ -1,27 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+html { scroll-behavior: smooth; }
+body { background:#efe4cf; color:#3b2f26; font-size:15px; font-family: 'Inter', ui-sans-serif, system-ui, 'Segoe UI', sans-serif; }
+.hand, .serif, .num { font-family: 'Inter', ui-sans-serif, system-ui, 'Segoe UI', sans-serif; }
+.num { font-variant-numeric: tabular-nums; }
+.serif { font-weight: 700; letter-spacing: -0.02em; }
+input, select, button, textarea { font-family: inherit; }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Focus ring fades in instead of snapping */
+input, select, textarea, button { outline: 2px solid transparent; outline-offset: -2px; border-radius: inherit; }
+input:focus, select:focus, textarea:focus, button:focus-visible { outline-color: #c2602f; border-radius: 6px; }
+input, select, textarea { transition: background-color .2s ease, color .2s ease, outline-color .15s ease; }
+input:hover, textarea:hover { background-color: rgba(194, 96, 47, 0.05); }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+input[type=number]::-webkit-inner-spin-button { display:none; }
+input[type=number] { -moz-appearance:textfield; }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* Buttons */
+button { transition: transform .15s ease, background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, opacity .2s ease, outline-color .15s ease; }
+button:not([aria-label]):hover:not(:disabled) { box-shadow: 0 3px 10px rgba(120, 90, 50, 0.2); transform: translateY(-1px); }
+button:active:not(:disabled) { transform: scale(.97); }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Spreadsheet rows */
+.sheet td { transition: opacity .2s ease, background-color .15s ease; }
+.sheet td.sticky { z-index: 10; }
+.sheet tbody tr:hover > td { background-color: #faf5e8; }
+.row-out > td { opacity: 0; }
+
+/* Entrance animations */
+@keyframes rise { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+@keyframes pop { from { opacity:0; transform:scale(.85); } to { opacity:1; transform:none; } }
+@keyframes menu { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:none; } }
+.rise { animation: rise .35s ease-out both; }
+.pop { animation: pop .2s ease-out both; }
+.menu-in { animation: menu .14s ease-out both; transform-origin: top left; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rise, .pop, .menu-in { animation: none; }
+  * { transition: none !important; }
 }
+@media (max-width: 1840px) { main { padding-top: 3.75rem !important; } }
